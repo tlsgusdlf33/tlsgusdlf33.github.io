@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="object-src 'none'; script-src 'sha256-Ke/t1LI5Ojolc9LKTIGIMpaCHWIoDZnn3K2ZRQNO9tU=' 'strict-dynamic' 'unsafe-inline' https: http:; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>&quot;버전 코드가 이미 사용되었습니다&quot; 오류 해결 — 구글 플레이</title>
+<meta name="description" content="Play Console에 AAB를 올릴 때 &#39;Version code N has already been used&#39; 오류가 나는 이유와 해결 방법, 다시 생기지 않게 versionCode를 관리하는 방법.">
+<link rel="canonical" href="https://tlsgusdlf33.github.io/guides/version-code-used/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="&quot;버전 코드가 이미 사용되었습니다&quot; 오류 해결 — 구글 플레이">
+<meta property="og:description" content="Play Console에 AAB를 올릴 때 &#39;Version code N has already been used&#39; 오류가 나는 이유와 해결 방법, 다시 생기지 않게 versionCode를 관리하는 방법.">
+<meta property="og:url" content="https://tlsgusdlf33.github.io/guides/version-code-used/">
+<meta property="og:locale" content="ko_KR">
+<meta name="theme-color" content="#1a7f37">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/site.css?v=85a382cd40">
+<meta name="page-scripts" content="/assets/js/ads.js?v=5803d898c8">
+<script type="application/json" id="site-config">{"adsenseClient":""}</script>
+<script>(function(){var d=document,m=d.querySelector('meta[name="page-scripts"]'),c={};try{c=JSON.parse(d.getElementById('site-config').textContent)}catch(e){}(m&&m.content||'').split(' ').forEach(function(p){if(!p)return;var s=d.createElement('script');s.src=p;s.async=false;d.head.appendChild(s)});if(c.adsenseClient){var a=d.createElement('script');a.async=true;a.crossOrigin='anonymous';a.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client='+encodeURIComponent(c.adsenseClient);d.head.appendChild(a)}})();</script>
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<header class="site-header">
+  <div class="wrap header-row">
+    <a class="brand" href="/"><span class="brand-mark" aria-hidden="true">▶</span> 앱 출시 도우미</a>
+    <nav aria-label="주요 메뉴">
+      <a href="/#tools">도구</a>
+      <a href="/guides/">가이드</a>
+    </nav>
+  </div>
+</header>
+<main id="main" class="wrap">
+<article>
+<h1>"버전 코드가 이미 사용되었습니다" 오류 해결</h1>
+<p class="muted">마지막 확인: 2026년 10월</p>
+<p>AAB를 올렸는데 <code>Version code 139 has already been used. Try another version code.</code> 같은 메시지가 나오면 당황스럽죠. 원인은 하나예요. <strong>그 번호를 이미 한 번 올렸기 때문</strong>이에요.</p>
+
+<h2>왜 생기나요?</h2>
+<ul>
+<li>Play는 한 번 올라간 versionCode를 <strong>다시 쓸 수 없게</strong> 해요. 출시를 취소했거나, 초안을 지웠거나, 다른 트랙(내부 테스트)에 올렸던 번호도 모두 "사용됨"으로 남아요.</li>
+<li>업데이트는 <strong>이전보다 큰 번호</strong>여야 기존 사용자에게 설치돼요. 같거나 작으면 업로드가 거절되거나 업데이트가 안 돼요.</li>
+<li>versionName(예: 1.2.0)은 사람에게 보여 주는 이름일 뿐이고, Play가 비교하는 것은 <strong>versionCode(정수)</strong>예요.</li>
+</ul>
+
+
+
+<h2>지금 바로 해결하기</h2>
+<ol>
+<li>Play Console > 테스트 및 출시 > <strong>App Bundle 탐색기</strong>에서 지금까지 올라간 가장 큰 versionCode를 확인해요.</li>
+<li><code>app/build.gradle</code>의 <code>versionCode</code>를 그보다 <strong>1 큰 값</strong>으로 바꿔요.</li>
+<li>다시 빌드(<code>./gradlew bundleRelease</code>)해서 새 AAB를 올려요.</li>
+</ol>
+<p>올리기 전에 <a href="/tools/aab-check/">AAB 검사기</a>에 파일을 넣고 "Play에 올라간 가장 큰 versionCode"를 적으면, 이 오류가 날지 미리 알려 줘요.</p>
+
+<h2>다시 안 생기게 하려면</h2>
+<h3>방법 1. 빌드할 때 번호를 바깥에서 넣기</h3>
+<pre>// app/build.gradle
+versionCode providers.gradleProperty("VERSION_CODE").map { it.toInteger() }.getOrElse(4)</pre>
+<p>자동 빌드(예: GitHub Actions)가 Play에서 가장 큰 번호를 읽어 <code>-PVERSION_CODE=다음번호</code>로 넘기면, 사람이 번호를 관리할 필요가 없어요. 로컬 빌드는 적힌 기본값(4)을 그대로 써요.</p>
+<h3>방법 2. 규칙 정하기</h3>
+<p>자동화가 어렵다면 "올리기 전에 반드시 1 올리고 커밋" 같은 규칙을 정하세요. 테스트 트랙과 프로덕션은 같은 번호 공간을 쓰므로, 테스트용 빌드와 정식 빌드를 따로 만든다면 번호가 계속 올라가요.</p>
+
+<h2>헷갈리기 쉬운 경우</h2>
+<ul>
+<li><strong>업로드는 됐는데 출시를 안 눌렀어요</strong> → 그래도 그 번호는 사용됨이에요.</li>
+<li><strong>프로덕션에 실제 광고 ID로 새로 빌드했어요</strong> → 비공개 테스트 빌드보다 큰 번호여야 해요.</li>
+<li><strong>versionName만 바꿨어요</strong> → versionCode도 바꿔야 해요.</li>
+</ul>
+</article>
+
+
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p class="footer-links"><a href="/privacy/">개인정보처리방침</a> · <a href="/about/">소개·문의</a> · <a href="/guides/">가이드</a></p>
+    <p class="muted">파일은 이 기기의 브라우저 안에서만 검사하고, 서버로 보내지 않습니다. 이 사이트의 안내는 참고용이며 최종 판단은 Google Play 정책을 따릅니다.</p>
+    <p class="muted">© 2026 앱 출시 도우미</p>
+  </div>
+</footer>
+</body>
+</html>

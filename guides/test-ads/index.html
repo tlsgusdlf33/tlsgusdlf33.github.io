@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="object-src 'none'; script-src 'sha256-Ke/t1LI5Ojolc9LKTIGIMpaCHWIoDZnn3K2ZRQNO9tU=' 'strict-dynamic' 'unsafe-inline' https: http:; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>AdMob 테스트 광고 ID와 실제 광고 ID 구분하기 — 계정 정지 예방</title>
+<meta name="description" content="비공개 테스트에는 구글 테스트 광고 ID, 정식 출시에는 실제 광고 ID를 써야 하는 이유와 빌드 종류별로 광고 ID를 나누는 Gradle 설정, 출시 전 확인 방법.">
+<link rel="canonical" href="https://tlsgusdlf33.github.io/guides/test-ads/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="AdMob 테스트 광고 ID와 실제 광고 ID 구분하기 — 계정 정지 예방">
+<meta property="og:description" content="비공개 테스트에는 구글 테스트 광고 ID, 정식 출시에는 실제 광고 ID를 써야 하는 이유와 빌드 종류별로 광고 ID를 나누는 Gradle 설정, 출시 전 확인 방법.">
+<meta property="og:url" content="https://tlsgusdlf33.github.io/guides/test-ads/">
+<meta property="og:locale" content="ko_KR">
+<meta name="theme-color" content="#1a7f37">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/site.css?v=85a382cd40">
+<meta name="page-scripts" content="/assets/js/ads.js?v=5803d898c8">
+<script type="application/json" id="site-config">{"adsenseClient":""}</script>
+<script>(function(){var d=document,m=d.querySelector('meta[name="page-scripts"]'),c={};try{c=JSON.parse(d.getElementById('site-config').textContent)}catch(e){}(m&&m.content||'').split(' ').forEach(function(p){if(!p)return;var s=d.createElement('script');s.src=p;s.async=false;d.head.appendChild(s)});if(c.adsenseClient){var a=d.createElement('script');a.async=true;a.crossOrigin='anonymous';a.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client='+encodeURIComponent(c.adsenseClient);d.head.appendChild(a)}})();</script>
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<header class="site-header">
+  <div class="wrap header-row">
+    <a class="brand" href="/"><span class="brand-mark" aria-hidden="true">▶</span> 앱 출시 도우미</a>
+    <nav aria-label="주요 메뉴">
+      <a href="/#tools">도구</a>
+      <a href="/guides/">가이드</a>
+    </nav>
+  </div>
+</header>
+<main id="main" class="wrap">
+<article>
+<h1>테스트 광고 ID와 실제 광고 ID 구분하기</h1>
+<p class="muted">마지막 확인: 2026년 10월</p>
+<p>AdMob을 쓰는 앱에서 가장 위험한 실수는 두 가지예요.</p>
+<ul>
+<li><strong>테스트 중인 앱에 실제 광고 ID</strong>가 들어감 → 나나 테스터가 광고를 누르면 "무효 클릭"으로 보여 AdMob 계정이 제한되거나 정지될 수 있어요.</li>
+<li><strong>정식 출시 앱에 테스트 광고 ID</strong>가 남음 → 광고는 "Test Ad"로만 나오고 수익이 0원이에요.</li>
+</ul>
+
+<h2>구글 공식 테스트 ID</h2>
+<div class="table-scroll"><table>
+<tr><th>종류</th><th>테스트 ID</th></tr>
+<tr><td>앱 ID</td><td><code>ca-app-pub-3940256099942544~3347511713</code></td></tr>
+<tr><td>적응형 배너</td><td><code>ca-app-pub-3940256099942544/9214589741</code></td></tr>
+<tr><td>고정 배너</td><td><code>ca-app-pub-3940256099942544/6300978111</code></td></tr>
+</table></div>
+<p>게시자 번호가 <code>3940256099942544</code>이면 구글 테스트 ID예요. 내 실제 ID는 AdMob > 앱 > 광고 단위에서 확인하고, 앱 ID는 <code>~</code>, 광고 단위 ID는 <code>/</code>로 나뉘어요. 둘을 바꿔 넣는 실수도 자주 나요.</p>
+
+
+
+<h2>빌드 종류별로 자동으로 나누기</h2>
+<pre>// app/build.gradle (Groovy)
+def TEST_APP_ID = "ca-app-pub-3940256099942544~3347511713"
+def TEST_BANNER = "ca-app-pub-3940256099942544/9214589741"
+buildTypes {
+    debug {
+        manifestPlaceholders += [admobAppId: TEST_APP_ID]
+        buildConfigField "String", "BANNER_ID", "\"${TEST_BANNER}\""
+    }
+    release {
+        manifestPlaceholders += [admobAppId: providers.gradleProperty("ADMOB_APP_ID").getOrElse(TEST_APP_ID)]
+        buildConfigField "String", "BANNER_ID", "\"${providers.gradleProperty("ADMOB_BANNER_ID").getOrElse(TEST_BANNER)}\""
+    }
+}</pre>
+<p>매니페스트에는 <code>&lt;meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="${admobAppId}"/&gt;</code>를 두세요. 비공개 테스트용 릴리스 빌드에도 테스트 ID를 쓰고 싶다면, 테스트 트랙 빌드에서만 <code>-PADMOB_APP_ID=테스트ID</code>로 덮어쓰면 돼요.</p>
+
+<h2>비공개 테스트 기간에는 테스트 광고로 충분해요</h2>
+<p>스토어에 정식 출시되지 않은 앱은 AdMob에서 스토어와 연결할 수 없어서, 실제 광고 수익을 제대로 받기 어려워요. 비공개 테스트 기간에는 테스트 광고로 화면 배치만 확인하고, 프로덕션 승인 뒤 실제 ID로 새로 빌드하세요. 실제 광고를 쓰는 빌드를 내 폰에서 확인해야 한다면 AdMob에 <strong>테스트 기기</strong>를 등록하세요.</p>
+
+<h2>출시 직전에 확인하기</h2>
+<p><a href="/tools/aab-check/">AAB 검사기</a>에 파일을 넣고 올릴 트랙(테스트/프로덕션)을 고르면, 파일 안에 들어 있는 광고 ID가 테스트용인지 실제용인지 찾아서 알려 줘요. 소스 코드가 아니라 <strong>최종 파일</strong>을 보기 때문에, 빌드 설정이 어떻게 섞였든 정확해요.</p>
+</article>
+
+
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p class="footer-links"><a href="/privacy/">개인정보처리방침</a> · <a href="/about/">소개·문의</a> · <a href="/guides/">가이드</a></p>
+    <p class="muted">파일은 이 기기의 브라우저 안에서만 검사하고, 서버로 보내지 않습니다. 이 사이트의 안내는 참고용이며 최종 판단은 Google Play 정책을 따릅니다.</p>
+    <p class="muted">© 2026 앱 출시 도우미</p>
+  </div>
+</footer>
+</body>
+</html>

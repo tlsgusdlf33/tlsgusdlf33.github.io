@@ -3,31 +3,69 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>tlsgusdlf33 앱</title>
-<style>
-:root { color-scheme: light dark; --bg: #ffffff; --fg: #1f2328; --muted: #59636e; --line: #d1d9e0; --link: #0969da; }
-@media (prefers-color-scheme: dark) { :root { --bg: #0d1117; --fg: #e6edf3; --muted: #9198a1; --line: #3d444d; --link: #4493f8; } }
-body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.6 system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
-main { max-width: 640px; margin: 0 auto; padding: 32px 16px; }
-h1 { font-size: 1.5rem; margin: 0 0 8px; }
-p { color: var(--muted); margin: 0 0 24px; }
-ul { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--line); }
-li { padding: 16px 0; border-bottom: 1px solid var(--line); }
-strong { display: block; font-size: 1.1rem; }
-a { color: var(--link); }
-</style>
+<meta http-equiv="Content-Security-Policy" content="object-src 'none'; script-src 'sha256-Ke/t1LI5Ojolc9LKTIGIMpaCHWIoDZnn3K2ZRQNO9tU=' 'strict-dynamic' 'unsafe-inline' https: http:; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>앱 출시 도우미 — 구글 플레이 첫 출시 무료 점검 도구</title>
+<meta name="description" content="구글 플레이에 안드로이드 앱을 처음 올리는 개인 개발자를 위한 무료 도구. AAB 검사, 스토어 그래픽 규격, 개인정보처리방침 만들기, 12명·14일 비공개 테스트 계산기와 출시 오류 해결 가이드.">
+<link rel="canonical" href="https://tlsgusdlf33.github.io/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="앱 출시 도우미 — 구글 플레이 첫 출시 무료 점검 도구">
+<meta property="og:description" content="구글 플레이에 안드로이드 앱을 처음 올리는 개인 개발자를 위한 무료 도구. AAB 검사, 스토어 그래픽 규격, 개인정보처리방침 만들기, 12명·14일 비공개 테스트 계산기와 출시 오류 해결 가이드.">
+<meta property="og:url" content="https://tlsgusdlf33.github.io/">
+<meta property="og:locale" content="ko_KR">
+<meta name="theme-color" content="#1a7f37">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/site.css?v=85a382cd40">
+<meta name="page-scripts" content="/assets/js/ads.js?v=5803d898c8">
+<script type="application/json" id="site-config">{"adsenseClient":""}</script>
+<script>(function(){var d=document,m=d.querySelector('meta[name="page-scripts"]'),c={};try{c=JSON.parse(d.getElementById('site-config').textContent)}catch(e){}(m&&m.content||'').split(' ').forEach(function(p){if(!p)return;var s=d.createElement('script');s.src=p;s.async=false;d.head.appendChild(s)});if(c.adsenseClient){var a=d.createElement('script');a.async=true;a.crossOrigin='anonymous';a.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client='+encodeURIComponent(c.adsenseClient);d.head.appendChild(a)}})();</script>
 </head>
 <body>
-<main>
-  <h1>tlsgusdlf33 앱</h1>
-  <p>Google Play에 배포하는 안드로이드 앱의 안내 페이지입니다.</p>
-  <ul>
-    <li>
-      <strong>주말나들이</strong>
-      아이와 가는 수도권 주말·공휴일 나들이 일정 추천<br>
-      <a href="jumalnadeuli-privacy.html">개인정보처리방침</a> · <a href="jumalnadeuli-privacy.html#delete">계정·데이터 삭제 방법</a>
-    </li>
-  </ul>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<header class="site-header">
+  <div class="wrap header-row">
+    <a class="brand" href="/"><span class="brand-mark" aria-hidden="true">▶</span> 앱 출시 도우미</a>
+    <nav aria-label="주요 메뉴">
+      <a href="/#tools">도구</a>
+      <a href="/guides/">가이드</a>
+    </nav>
+  </div>
+</header>
+<main id="main" class="wrap">
+<h1>구글 플레이 첫 출시, 실수 없이</h1>
+<p class="lead">개인 개발자가 안드로이드 앱을 처음 올릴 때 자주 막히는 곳을 무료로 점검해 드려요. 로그인도 설치도 필요 없고, 파일은 이 기기 밖으로 나가지 않아요.</p>
+
+<h2 id="tools">무료 도구</h2>
+<ul class="cards">
+  <li class="card"><a class="card-title" href="/tools/aab-check/">AAB 출시 전 검사기</a><p>테스트 광고 ID, versionCode 중복, 업로드 키 서명, 디버그 빌드, targetSdk, 신고 필요 권한</p></li>
+  <li class="card"><a class="card-title" href="/tools/store-graphics/">스토어 등록정보 검사기</a><p>앱 이름·설명 글자 수, 아이콘·그래픽·스크린샷 크기와 형식</p></li>
+  <li class="card"><a class="card-title" href="/tools/privacy-policy/">개인정보처리방침 만들기</a><p>AdMob·카카오·구글 로그인 앱용 초안과 app-ads.txt, 운영자 이메일 오타 검사</p></li>
+  <li class="card"><a class="card-title" href="/tools/closed-test/">12명·14일 계산기</a><p>프로덕션 신청 가능일 계산과 테스터 안내문</p></li>
+</ul>
+
+
+
+<h2>출시 가이드</h2>
+<ul class="cards">
+  <li class="card"><a class="card-title" href="/guides/first-release/">첫 출시 14단계 한눈에 보기</a><p>개발자 계정부터 프로덕션까지, 사람이 할 일과 자동화할 수 있는 일</p></li>
+  <li class="card"><a class="card-title" href="/guides/version-code-used/">"버전 코드가 이미 사용됨" 오류</a><p>왜 생기고, 다시 안 생기게 하려면</p></li>
+  <li class="card"><a class="card-title" href="/guides/test-ads/">테스트 광고 vs 실제 광고</a><p>AdMob 계정 정지를 막는 빌드 설정</p></li>
+  <li class="card"><a class="card-title" href="/guides/closed-test-12-14/">12명·14일 비공개 테스트 진행법</a><p>테스터 모으기, 끊기지 않게 운영하기, 신청서 답변</p></li>
+  <li class="card"><a class="card-title" href="/guides/draft-app/">초안 앱·검토 제출이 막힐 때</a><p>"초안 앱에는 초안 출시만" 메시지와 관리형 게시</p></li>
+  <li class="card"><a class="card-title" href="/guides/privacy-operator/">개인정보 보호책임자 이름·이메일 적는 법</a><p>무엇을 적고, 잘못 적으면 어떻게 고치나</p></li>
+</ul>
+
+<h2>제가 만든 앱</h2>
+<ul class="cards"><li class="card"><strong>주말나들이</strong><p>아이와 가는 수도권 주말·공휴일 나들이 일정 추천</p><p><a href="/jumalnadeuli-privacy.html">개인정보처리방침</a></p></li></ul>
+
+
 </main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p class="footer-links"><a href="/privacy/">개인정보처리방침</a> · <a href="/about/">소개·문의</a> · <a href="/guides/">가이드</a></p>
+    <p class="muted">파일은 이 기기의 브라우저 안에서만 검사하고, 서버로 보내지 않습니다. 이 사이트의 안내는 참고용이며 최종 판단은 Google Play 정책을 따릅니다.</p>
+    <p class="muted">© 2026 앱 출시 도우미</p>
+  </div>
+</footer>
 </body>
 </html>

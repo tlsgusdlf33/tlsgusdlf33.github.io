@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="object-src 'none'; script-src 'sha256-Ke/t1LI5Ojolc9LKTIGIMpaCHWIoDZnn3K2ZRQNO9tU=' 'strict-dynamic' 'unsafe-inline' https: http:; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>스토어 등록정보 검사기 — 아이콘·그래픽·스크린샷 규격</title>
+<meta name="description" content="구글 플레이 스토어 등록정보의 앱 이름(30자), 짧은 설명(80자), 자세한 설명(4000자), 아이콘 512×512, 그래픽 이미지 1024×500, 휴대폰 스크린샷 규격을 올리기 전에 확인합니다.">
+<link rel="canonical" href="https://tlsgusdlf33.github.io/tools/store-graphics/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="스토어 등록정보 검사기 — 아이콘·그래픽·스크린샷 규격">
+<meta property="og:description" content="구글 플레이 스토어 등록정보의 앱 이름(30자), 짧은 설명(80자), 자세한 설명(4000자), 아이콘 512×512, 그래픽 이미지 1024×500, 휴대폰 스크린샷 규격을 올리기 전에 확인합니다.">
+<meta property="og:url" content="https://tlsgusdlf33.github.io/tools/store-graphics/">
+<meta property="og:locale" content="ko_KR">
+<meta name="theme-color" content="#1a7f37">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/site.css?v=85a382cd40">
+<meta name="page-scripts" content="/assets/js/core.js?v=76bb0499a7 /assets/js/imagecheck.js?v=017ea17fd6 /assets/js/ui.js?v=9c196476b6 /assets/js/page-store.js?v=c756591af5 /assets/js/ads.js?v=5803d898c8">
+<script type="application/json" id="site-config">{"adsenseClient":""}</script>
+<script>(function(){var d=document,m=d.querySelector('meta[name="page-scripts"]'),c={};try{c=JSON.parse(d.getElementById('site-config').textContent)}catch(e){}(m&&m.content||'').split(' ').forEach(function(p){if(!p)return;var s=d.createElement('script');s.src=p;s.async=false;d.head.appendChild(s)});if(c.adsenseClient){var a=d.createElement('script');a.async=true;a.crossOrigin='anonymous';a.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client='+encodeURIComponent(c.adsenseClient);d.head.appendChild(a)}})();</script>
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<header class="site-header">
+  <div class="wrap header-row">
+    <a class="brand" href="/"><span class="brand-mark" aria-hidden="true">▶</span> 앱 출시 도우미</a>
+    <nav aria-label="주요 메뉴">
+      <a href="/#tools">도구</a>
+      <a href="/guides/">가이드</a>
+    </nav>
+  </div>
+</header>
+<main id="main" class="wrap">
+<h1>스토어 등록정보 검사기</h1>
+<p class="lead">앱 이름·설명 글자 수와 아이콘·그래픽·스크린샷 크기를 Play 규격에 맞는지 확인해요.</p>
+<div class="notice">🔒 이미지는 이 기기의 브라우저 안에서만 읽어요. 서버로 보내지 않아요.</div>
+
+<div class="panel">
+  <label for="t-title">앱 이름 <span class="hint" id="t-title-count">0 / 30자</span></label>
+  <input type="text" id="t-title" autocomplete="off">
+  <label for="t-short">짧은 설명 <span class="hint" id="t-short-count">0 / 80자</span></label>
+  <input type="text" id="t-short" autocomplete="off">
+  <label for="t-full">자세한 설명 <span class="hint" id="t-full-count">0 / 4000자</span></label>
+  <textarea id="t-full" rows="6"></textarea>
+
+  <label for="f-icon">앱 아이콘 <span class="hint">512×512 PNG, 1MB 이하</span></label>
+  <input type="file" id="f-icon" accept="image/png">
+  <label for="f-feature">그래픽 이미지 <span class="hint">1024×500 JPEG 또는 PNG (투명 없음)</span></label>
+  <input type="file" id="f-feature" accept="image/png,image/jpeg">
+  <label for="f-phones">휴대폰 스크린샷 <span class="hint">2~8장 한꺼번에 고르기, 한 변 320~3840px</span></label>
+  <input type="file" id="f-phones" accept="image/png,image/jpeg" multiple>
+</div>
+
+<section id="store-result" aria-live="polite"></section>
+
+
+
+<h2>규격 한눈에 보기</h2>
+<div class="table-scroll"><table>
+  <tr><th>항목</th><th>규격</th></tr>
+  <tr><td>앱 이름</td><td>30자 이하</td></tr>
+  <tr><td>짧은 설명</td><td>80자 이하</td></tr>
+  <tr><td>자세한 설명</td><td>4000자 이하</td></tr>
+  <tr><td>앱 아이콘</td><td>512×512 PNG, 1MB 이하 (32비트, 알파 포함 권장)</td></tr>
+  <tr><td>그래픽 이미지</td><td>1024×500 JPEG 또는 24비트 PNG(투명 없음)</td></tr>
+  <tr><td>휴대폰 스크린샷</td><td>2~8장, JPEG 또는 24비트 PNG, 한 변 320~3840px, 긴 변이 짧은 변의 2배 이하. 추천 노출을 원하면 1080px 이상 4장 이상</td></tr>
+</table></div>
+<p class="muted">규격은 바뀔 수 있어요. 마지막 확인: 2026년 10월.</p>
+
+
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p class="footer-links"><a href="/privacy/">개인정보처리방침</a> · <a href="/about/">소개·문의</a> · <a href="/guides/">가이드</a></p>
+    <p class="muted">파일은 이 기기의 브라우저 안에서만 검사하고, 서버로 보내지 않습니다. 이 사이트의 안내는 참고용이며 최종 판단은 Google Play 정책을 따릅니다.</p>
+    <p class="muted">© 2026 앱 출시 도우미</p>
+  </div>
+</footer>
+</body>
+</html>

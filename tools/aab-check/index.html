@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="object-src 'none'; script-src 'sha256-Ke/t1LI5Ojolc9LKTIGIMpaCHWIoDZnn3K2ZRQNO9tU=' 'strict-dynamic' 'unsafe-inline' https: http:; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>AAB 출시 전 검사기 — 광고 ID·versionCode·서명 확인</title>
+<meta name="description" content="구글 플레이에 올리기 전에 AAB 파일의 테스트 광고 ID, versionCode 중복, 업로드 키 서명, 패키지 이름, 디버그 빌드, targetSdk, 신고 필요 권한을 브라우저에서 바로 검사합니다. 파일은 서버로 보내지 않아요.">
+<link rel="canonical" href="https://tlsgusdlf33.github.io/tools/aab-check/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="AAB 출시 전 검사기 — 광고 ID·versionCode·서명 확인">
+<meta property="og:description" content="구글 플레이에 올리기 전에 AAB 파일의 테스트 광고 ID, versionCode 중복, 업로드 키 서명, 패키지 이름, 디버그 빌드, targetSdk, 신고 필요 권한을 브라우저에서 바로 검사합니다. 파일은 서버로 보내지 않아요.">
+<meta property="og:url" content="https://tlsgusdlf33.github.io/tools/aab-check/">
+<meta property="og:locale" content="ko_KR">
+<meta name="theme-color" content="#1a7f37">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/site.css?v=85a382cd40">
+<meta name="page-scripts" content="/assets/js/core.js?v=76bb0499a7 /assets/js/zip.js?v=d44259045e /assets/js/protoxml.js?v=d82a3ff72f /assets/js/der.js?v=a529b05761 /assets/js/policy.js?v=803aeae4e6 /assets/js/aab.js?v=e670b94765 /assets/js/checks.js?v=746579d2fc /assets/js/ui.js?v=9c196476b6 /assets/js/page-aab.js?v=1e8267e8f0 /assets/js/ads.js?v=5803d898c8">
+<script type="application/json" id="site-config">{"adsenseClient":""}</script>
+<script>(function(){var d=document,m=d.querySelector('meta[name="page-scripts"]'),c={};try{c=JSON.parse(d.getElementById('site-config').textContent)}catch(e){}(m&&m.content||'').split(' ').forEach(function(p){if(!p)return;var s=d.createElement('script');s.src=p;s.async=false;d.head.appendChild(s)});if(c.adsenseClient){var a=d.createElement('script');a.async=true;a.crossOrigin='anonymous';a.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client='+encodeURIComponent(c.adsenseClient);d.head.appendChild(a)}})();</script>
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<header class="site-header">
+  <div class="wrap header-row">
+    <a class="brand" href="/"><span class="brand-mark" aria-hidden="true">▶</span> 앱 출시 도우미</a>
+    <nav aria-label="주요 메뉴">
+      <a href="/#tools">도구</a>
+      <a href="/guides/">가이드</a>
+    </nav>
+  </div>
+</header>
+<main id="main" class="wrap">
+<h1>AAB 출시 전 검사기</h1>
+<p class="lead">Play Console에 올리기 전에, 실제로 올라갈 <strong>.aab 파일</strong>을 열어 흔한 출시 실수를 찾아 줘요.</p>
+<div class="notice">🔒 파일은 <strong>이 기기의 브라우저 안에서만</strong> 읽어요. 서버로 보내지 않고, 저장하지도 않아요.</div>
+
+<div class="drop" id="drop">
+  <p><strong>.aab 파일을 여기에 끌어다 놓거나</strong> 아래에서 골라 주세요.</p>
+  <input type="file" id="aab-file" accept=".aab" aria-label="AAB 파일 고르기">
+  <p class="hint">Android Studio: Build → Generate Signed App Bundle, 또는 <code>./gradlew bundleRelease</code> → <code>app/build/outputs/bundle/release/app-release.aab</code></p>
+</div>
+<p id="aab-status" role="status" class="muted"></p>
+
+<form id="aab-form" class="panel">
+  <fieldset>
+    <legend>어디에 올릴 건가요?</legend>
+    <label class="choice"><input type="radio" name="track" value="test" checked> 내부 테스트·비공개 테스트 <span class="hint">구글 테스트 광고 ID만 들어 있어야 해요</span></label>
+    <label class="choice"><input type="radio" name="track" value="production"> 프로덕션(정식 출시) <span class="hint">내 실제 광고 ID만 들어 있어야 해요</span></label>
+    <label class="choice"><input type="checkbox" name="noAds"> 광고를 넣지 않은 앱이에요</label>
+  </fieldset>
+  <details>
+    <summary>더 꼼꼼하게 검사하기 (선택)</summary>
+    <label>패키지 이름 <span class="hint">예: com.example.myapp — 다른 앱이나 디버그 빌드를 올리는 실수를 막아요</span><input type="text" name="package" autocomplete="off" spellcheck="false"></label>
+    <label>Play에 올라간 가장 큰 versionCode <span class="hint">Play Console > App Bundle 탐색기에서 확인. 적으면 "버전 코드가 이미 사용됨" 오류를 미리 막아요</span><input type="number" name="playMax" min="0" inputmode="numeric"></label>
+    <label>업로드 키 SHA-256 <span class="hint">Play Console > 앱 무결성 > 앱 서명 > 업로드 키 인증서</span><input type="text" name="upload" autocomplete="off" spellcheck="false"></label>
+    <label>AdMob 게시자 ID <span class="hint">예: pub-1234567890123456 — 프로덕션 검사 때 다른 계정의 ID를 막아요</span><input type="text" name="publisher" autocomplete="off" spellcheck="false"></label>
+    <label>이 앱의 AdMob 앱 ID <span class="hint">예: ca-app-pub-…~… — 다른 앱의 ID를 넣는 실수를 막아요</span><input type="text" name="adAppId" autocomplete="off" spellcheck="false"></label>
+  </details>
+</form>
+
+<section id="aab-result" aria-live="polite"></section>
+<section id="aab-info"></section>
+
+
+
+<h2>무엇을 검사하나요?</h2>
+<div class="table-scroll"><table>
+  <tr><th>검사</th><th>막아 주는 실수</th></tr>
+  <tr><td>패키지 이름·디버그 빌드</td><td><code>.debug</code>가 붙은 디버그 빌드나 다른 앱 파일을 올리는 실수</td></tr>
+  <tr><td>업로드 키 서명</td><td>서명 안 된 파일, 디버그 키로 서명한 파일, 다른 업로드 키</td></tr>
+  <tr><td>versionCode</td><td>"버전 코드가 이미 사용되었습니다" 오류 (이미 쓴 번호 이하)</td></tr>
+  <tr><td>광고 ID</td><td>테스트 트랙에 실제 광고 ID(계정 정지 위험), 정식 출시에 테스트 광고 ID(수익 0원), 다른 앱의 광고 ID</td></tr>
+  <tr><td>targetSdk</td><td>Play가 요구하는 최소 버전보다 낮아 업로드가 거부되는 경우</td></tr>
+  <tr><td>권한</td><td>정확한 알람, 위치, SMS처럼 Play Console에 따로 신고해야 하는 권한</td></tr>
+</table></div>
+<p>검사 방법이 궁금하면 <a href="/guides/test-ads/">테스트 광고와 실제 광고 구분하기</a>, <a href="/guides/version-code-used/">버전 코드 이미 사용됨 오류</a>를 읽어 보세요.</p>
+
+
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p class="footer-links"><a href="/privacy/">개인정보처리방침</a> · <a href="/about/">소개·문의</a> · <a href="/guides/">가이드</a></p>
+    <p class="muted">파일은 이 기기의 브라우저 안에서만 검사하고, 서버로 보내지 않습니다. 이 사이트의 안내는 참고용이며 최종 판단은 Google Play 정책을 따릅니다.</p>
+    <p class="muted">© 2026 앱 출시 도우미</p>
+  </div>
+</footer>
+</body>
+</html>
