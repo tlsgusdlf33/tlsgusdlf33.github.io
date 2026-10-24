@@ -48,8 +48,9 @@
       if (!file) return;
       out.textContent = '';
       info.textContent = '';
-      if (!/\.aab$/i.test(file.name)) {
-        status.textContent = '.aab 파일을 골라 주세요. (APK가 아니라 bundleRelease로 만든 AAB)';
+      // 휴대폰 파일 선택 창은 .aab 형식을 몰라 accept로 거르면 아예 못 고르는 경우가 있어, 여기서 확인
+      if (/\.apk$/i.test(file.name)) {
+        status.textContent = 'APK 파일이에요. Play에 올리는 건 AAB예요 (./gradlew bundleRelease → app-release.aab).';
         return;
       }
       status.textContent = file.name + ' 읽는 중…';
