@@ -31,6 +31,11 @@ a { color: var(--accent); }
 ol.steps { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 4px; }
 .todo { background: #FBEBC4; color: #6B4600; padding: 0 4px; border-radius: 4px; }
 .foot { font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 12px; }
+
+/* 추가된 다운로드 버튼 스타일 */
+.download-btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background-color: var(--surface); border: 1px solid var(--line); border-radius: 8px; color: var(--fg); text-decoration: none; font-size: 14px; font-weight: 500; transition: background-color 0.2s; max-width: max-content; }
+.download-btn:hover { background-color: var(--accent-soft); border-color: var(--accent); }
+.download-btn svg { width: 16px; height: 16px; fill: currentColor; }
 </style>
 </head>
 <body>
@@ -38,6 +43,13 @@ ol.steps { margin: 0; padding-left: 22px; display: flex; flex-direction: column;
   <span class="brand"><i aria-hidden="true"></i>주말나들이 · 아이와 가는 주말·휴일 나들이 앱</span>
   <h1>개인정보처리방침</h1>
   <p class="lead">주말나들이(이하 "앱")는 「개인정보 보호법」에 따라 이용자의 개인정보를 보호하기 위해 다음과 같이 개인정보처리방침을 둡니다. 시행일: 2026년 10월 17일</p>
+  
+  <!-- 첨부파일 다운로드 버튼 -->
+  <a href="주말나들이 개인정보처리방침.docx" download class="download-btn">
+    <svg viewBox="0 0 16 16"><path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/><path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/></svg>
+    개인정보처리방침 문서 다운로드 (.docx)
+  </a>
+
   <nav class="toc" aria-label="목차">
     <a href="#login">로그인과 저장 정보</a><a href="#notify">알림</a><a href="#delete">계정·데이터 삭제</a><a href="#ads">광고</a><a href="#weather">날씨·일정</a><a href="#contact">문의</a>
   </nav>
@@ -83,8 +95,8 @@ ol.steps { margin: 0; padding-left: 22px; display: flex; flex-direction: column;
 
   <h2 id="contact">8. 개인정보 보호책임자와 문의</h2>
   <div class="box">
-    <p>이름: <span class="todo">[운영자 이름 입력 필요]</span></p>
-    <p>이메일: <span class="todo">[문의 이메일 입력 필요]</span></p>
+    <p>이름: hulkmacaron</p>
+    <p>이메일: hulkmacaron33@gmail.com</p>
   </div>
   <p>개인정보 침해 신고·상담: 개인정보침해신고센터(privacy.kisa.or.kr, 국번 없이 118)</p>
 
