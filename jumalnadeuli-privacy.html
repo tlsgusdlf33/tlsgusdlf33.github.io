@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>주말나들이 개인정보처리방침</title>
+<style>
+/* Layout: single readable column, legal document with a sticky table of contents chip row */
+:root {
+  --bg: #F5F6EE; --surface: #FFFFFF; --fg: #1D2115; --muted: #5F6652; --line: #D9DCCB; --accent: #6F7A00; --accent-soft: #E6EAC2;
+  --font: "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #11130D; --surface: #1A1D14; --fg: #ECEFE0; --muted: #A3A991; --line: #30352A; --accent: #B9C63C; --accent-soft: #2D3312; color-scheme: dark } }
+:root[data-theme="dark"] { --bg: #11130D; --surface: #1A1D14; --fg: #ECEFE0; --muted: #A3A991; --line: #30352A; --accent: #B9C63C; --accent-soft: #2D3312; color-scheme: dark }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15.5px; line-height: 1.7; }
+.wrap { max-width: 720px; margin: 0 auto; padding-block: 32px 64px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: flex; flex-direction: column; gap: 18px; }
+.brand { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+.brand i { display: inline-block; width: 34px; height: 6px; border-radius: 3px; background: var(--accent); position: relative; }
+.brand i::before, .brand i::after { content: ""; position: absolute; top: -4px; width: 14px; height: 14px; border-radius: 50%; background: var(--surface); border: 3px solid var(--accent); box-sizing: border-box; }
+.brand i::before { left: -6px; } .brand i::after { right: -6px; }
+h1 { font-size: 28px; line-height: 1.25; margin: 0; text-wrap: balance; }
+h2 { font-size: 18px; margin: 18px 0 0; text-wrap: balance; }
+p, ul { margin: 0; max-width: 65ch; }
+ul { padding-left: 20px; display: flex; flex-direction: column; gap: 4px; }
+a { color: var(--accent); }
+.lead { color: var(--muted); }
+.toc { display: flex; flex-wrap: wrap; gap: 6px; }
+.toc a { font-size: 13px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); text-decoration: none; }
+.box { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+.box.delete { border-color: var(--accent); background: var(--accent-soft); }
+ol.steps { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 4px; }
+.todo { background: #FBEBC4; color: #6B4600; padding: 0 4px; border-radius: 4px; }
+.foot { font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 12px; }
+
+/* 추가된 다운로드 버튼 스타일 */
+.download-btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background-color: var(--surface); border: 1px solid var(--line); border-radius: 8px; color: var(--fg); text-decoration: none; font-size: 14px; font-weight: 500; transition: background-color 0.2s; max-width: max-content; }
+.download-btn:hover { background-color: var(--accent-soft); border-color: var(--accent); }
+.download-btn svg { width: 16px; height: 16px; fill: currentColor; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="brand"><i aria-hidden="true"></i>주말나들이 · 아이와 가는 주말·휴일 나들이 앱</span>
+  <h1>개인정보처리방침</h1>
+  <p class="lead">주말나들이(이하 "앱")는 「개인정보 보호법」에 따라 이용자의 개인정보를 보호하기 위해 다음과 같이 개인정보처리방침을 둡니다. 시행일: 2026년 10월 17일</p>
+  
+  <!-- 첨부파일 다운로드 버튼 -->
+  <a href="주말나들이 개인정보처리방침.docx" download class="download-btn">
+    <svg viewBox="0 0 16 16"><path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/><path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/></svg>
+    개인정보처리방침 문서 다운로드 (.docx)
+  </a>
+
+  <nav class="toc" aria-label="목차">
+    <a href="#login">로그인과 저장 정보</a><a href="#notify">알림</a><a href="#delete">계정·데이터 삭제</a><a href="#ads">광고</a><a href="#weather">날씨·일정</a><a href="#contact">문의</a>
+  </nav>
+
+  <h2 id="login">1. 로그인과 저장하는 정보</h2>
+  <ul>
+    <li>카카오 로그인: 카카오가 제공하는 회원번호와 닉네임을 받습니다.</li>
+    <li>Google 로그인: Google 계정 고유 ID와 이름을 받습니다.</li>
+    <li>앱은 회원번호·고유 ID를 되돌릴 수 없는 값(해시)으로 바꿔, 이름·출발지·여행 조건(여행 형태, 이동 범위)·이용자가 입력한 "내 일정"(날짜, 시간, 제목, 대략적 장소)과 함께 <strong>이용자 기기 안에만</strong> 저장합니다. 앱 운영자의 서버로 보내지 않습니다.</li>
+    <li>목적: 다음 실행 때 로그인 상태와 설정을 이어서 쓰고, 내 일정에 맞춰 나들이 일정을 계산하기 위함입니다.</li>
+    <li>게스트로 이용하면 출발지·여행 조건·내 일정을 포함해 아무 정보도 저장하지 않습니다.</li>
+    <li>준비물 체크 표시는 기기 안에만 저장됩니다.</li>
+  </ul>
+
+  <h2 id="notify">2. 알림</h2>
+  <p>쉬는 날이 끝나는 날 밤 9시 알림은 기기 안에서 만들어 보여 줍니다. 알림 문구를 만들기 위해 소셜 계정은 저장된 출발지·이동 범위를, 게스트는 기본값(서울 강남구, 편도 1시간)을 기기에 보관합니다. 알림은 앱의 계정 화면이나 휴대폰 설정에서 끌 수 있습니다.</p>
+
+  <h2 id="delete">3. 보유 기간과 계정·데이터 삭제</h2>
+  <p>로그아웃해도 그 계정의 설정은 기기에 남아 다음 로그인 때 다시 씁니다. 운영자 서버에는 이용자 정보가 없으므로, 아래 방법으로 기기에 저장된 정보를 지우면 모든 정보가 삭제됩니다.</p>
+  <div class="box delete">
+    <b>계정과 데이터 삭제 방법</b>
+    <ol class="steps">
+      <li>앱에서 오른쪽 위 이름 버튼을 눌러 <b>계정</b> 화면으로 갑니다.</li>
+      <li><b>계정 연결 해제 · 데이터 삭제</b>를 누르고 한 번 더 확인합니다.</li>
+      <li>기기에 저장된 그 계정의 출발지·여행 조건·내 일정이 지워지고, 카카오 로그인은 앱과의 연결이 끊깁니다.</li>
+    </ol>
+    <p>앱을 삭제해도 기기에 저장된 정보는 모두 지워집니다. 앱을 쓸 수 없는 경우 아래 문의처로 삭제를 요청하면 지체 없이 처리 방법을 안내합니다. Google 계정과 앱의 연결은 Google 계정 설정(myaccount.google.com → 보안 → 서드 파티 앱 및 서비스)에서도 끊을 수 있습니다.</p>
+  </div>
+
+  <h2 id="ads">4. 광고(Google AdMob)</h2>
+  <p>앱은 Google AdMob으로 광고를 보여 줍니다. Google은 광고 제공과 측정, 부정 방지를 위해 광고 ID, IP 주소, 기기·앱 정보, 광고 상호작용 정보를 수집·이용할 수 있습니다. 자세한 내용은 <a href="https://policies.google.com/privacy">Google 개인정보처리방침</a>과 <a href="https://policies.google.com/technologies/partner-sites">파트너 데이터 사용 안내</a>를 참고하세요.</p>
+  <p>맞춤 광고는 기기 설정에서 광고 ID를 재설정하거나 삭제해 끌 수 있습니다. 유럽경제지역·영국·스위스 이용자는 앱의 동의 메시지와 "광고 개인정보 설정"에서 선택을 바꿀 수 있습니다.</p>
+
+  <h2 id="weather">5. 일정 데이터와 날씨 내려받기</h2>
+  <p>새 일정을 받기 위해 앱이 일정 파일을 내려받을 때 서버에 IP 주소와 접속 시각이 기록될 수 있습니다.</p>
+  <p>날씨는 기상청 예보를 공공데이터포털(data.go.kr)에서 받아 옵니다. 이때 이용자의 실제 위치가 아니라 선택한 출발지(시·구청 또는 역) 좌표를 기상청 예보 격자·예보구역으로 바꾼 값만 보내며, 요청 과정에서 IP 주소가 그 서버에 전달됩니다. 앱은 휴대폰의 위치 정보를 쓰지 않습니다.</p>
+
+  <h2>6. 제3자 제공</h2>
+  <p>앱은 위 로그인·광고·날씨 서비스 외에 이용자의 정보를 제3자에게 제공하지 않습니다. 로그인 과정의 정보 처리는 카카오와 Google의 개인정보처리방침을 따릅니다.</p>
+
+  <h2>7. 이용자의 권리</h2>
+  <p>이용자는 개인정보 열람, 정정, 삭제, 처리정지를 요구할 수 있으며 아래 연락처로 요청하면 지체 없이 처리합니다.</p>
+
+  <h2 id="contact">8. 개인정보 보호책임자와 문의</h2>
+  <div class="box">
+    <p>이름: hulkmacaron</p>
+    <p>이메일: hulkmacaron33@gmail.com</p>
+  </div>
+  <p>개인정보 침해 신고·상담: 개인정보침해신고센터(privacy.kisa.or.kr, 국번 없이 118)</p>
+
+  <p class="foot">이 방침은 2026년 10월 17일부터 적용됩니다. 내용이 바뀌면 이 페이지와 앱 안의 방침을 함께 고치고 시행일을 바꿉니다.</p>
+</div>
+</body>
+</html>
