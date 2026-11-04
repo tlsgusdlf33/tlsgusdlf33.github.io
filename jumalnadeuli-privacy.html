@@ -31,25 +31,13 @@ a { color: var(--accent); }
 ol.steps { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 4px; }
 .todo { background: #FBEBC4; color: #6B4600; padding: 0 4px; border-radius: 4px; }
 .foot { font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 12px; }
-
-/* 추가된 다운로드 버튼 스타일 */
-.download-btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background-color: var(--surface); border: 1px solid var(--line); border-radius: 8px; color: var(--fg); text-decoration: none; font-size: 14px; font-weight: 500; transition: background-color 0.2s; max-width: max-content; }
-.download-btn:hover { background-color: var(--accent-soft); border-color: var(--accent); }
-.download-btn svg { width: 16px; height: 16px; fill: currentColor; }
 </style>
 </head>
 <body>
 <div class="wrap">
   <span class="brand"><i aria-hidden="true"></i>주말나들이 · 아이와 가는 주말·휴일 나들이 앱</span>
   <h1>개인정보처리방침</h1>
-  <p class="lead">주말나들이(이하 "앱")는 「개인정보 보호법」에 따라 이용자의 개인정보를 보호하기 위해 다음과 같이 개인정보처리방침을 둡니다. 시행일: 2026년 10월 17일</p>
-  
-  <!-- 첨부파일 다운로드 버튼 -->
-  <a href="주말나들이 개인정보처리방침.docx" download class="download-btn">
-    <svg viewBox="0 0 16 16"><path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/><path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/></svg>
-    개인정보처리방침 문서 다운로드 (.docx)
-  </a>
-
+  <p class="lead">주말나들이(이하 "앱")는 「개인정보 보호법」에 따라 이용자의 개인정보를 보호하기 위해 다음과 같이 개인정보처리방침을 둡니다. 시행일: 2026년 10월 30일</p>
   <nav class="toc" aria-label="목차">
     <a href="#login">로그인과 저장 정보</a><a href="#notify">알림</a><a href="#delete">계정·데이터 삭제</a><a href="#ads">광고</a><a href="#weather">날씨·일정</a><a href="#contact">문의</a>
   </nav>
@@ -58,9 +46,9 @@ ol.steps { margin: 0; padding-left: 22px; display: flex; flex-direction: column;
   <ul>
     <li>카카오 로그인: 카카오가 제공하는 회원번호와 닉네임을 받습니다.</li>
     <li>Google 로그인: Google 계정 고유 ID와 이름을 받습니다.</li>
-    <li>앱은 회원번호·고유 ID를 되돌릴 수 없는 값(해시)으로 바꿔, 이름·출발지·여행 조건(여행 형태, 이동 범위)·이용자가 입력한 "내 일정"(날짜, 시간, 제목, 대략적 장소)과 함께 <strong>이용자 기기 안에만</strong> 저장합니다. 앱 운영자의 서버로 보내지 않습니다.</li>
+    <li>앱은 회원번호·고유 ID를 되돌릴 수 없는 값(해시)으로 바꿔, 이름·출발지·도착지·여행 조건(여행 형태, 이동 범위, 출발·귀가 시간)·이용자가 입력한 "내 일정"(날짜, 시간, 제목, 대략적 장소)과 함께 <strong>이용자 기기 안에만</strong> 저장합니다. 앱 운영자의 서버로 보내지 않습니다.</li>
     <li>목적: 다음 실행 때 로그인 상태와 설정을 이어서 쓰고, 내 일정에 맞춰 나들이 일정을 계산하기 위함입니다.</li>
-    <li>게스트로 이용하면 출발지·여행 조건·내 일정을 포함해 아무 정보도 저장하지 않습니다.</li>
+    <li>게스트로 이용하면 출발지·도착지·여행 조건·내 일정을 포함해 아무 정보도 저장하지 않습니다.</li>
     <li>준비물 체크 표시는 기기 안에만 저장됩니다.</li>
   </ul>
 
@@ -85,22 +73,26 @@ ol.steps { margin: 0; padding-left: 22px; display: flex; flex-direction: column;
 
   <h2 id="weather">5. 일정 데이터와 날씨 내려받기</h2>
   <p>새 일정을 받기 위해 앱이 일정 파일을 내려받을 때 서버에 IP 주소와 접속 시각이 기록될 수 있습니다.</p>
-  <p>날씨는 기상청 예보를 공공데이터포털(data.go.kr)에서 받아 옵니다. 이때 이용자의 실제 위치가 아니라 선택한 출발지(시·구청 또는 역) 좌표를 기상청 예보 격자·예보구역으로 바꾼 값만 보내며, 요청 과정에서 IP 주소가 그 서버에 전달됩니다. 앱은 휴대폰의 위치 정보를 쓰지 않습니다.</p>
+  <p>날씨는 기상청 예보를 공공데이터포털(data.go.kr)에서 받아 옵니다. 이때 이용자의 실제 위치가 아니라 선택한 출발지(시·군·구, 역, 읍·면·동 또는 지도에서 찾은 장소) 좌표를 기상청 예보 격자·예보구역으로 바꾼 값만 보내며, 요청 과정에서 IP 주소가 그 서버에 전달됩니다. 앱은 휴대폰의 위치 정보를 쓰지 않습니다.</p>
+  <p>숙소 추천·검색(1박 이상 여행)은 한국관광공사 관광정보를 공공데이터포털(data.go.kr)에서 받아 옵니다. 이때 <strong>숙박 기준 좌표(첫날 행사장 근처)나 이용자가 입력한 숙소 검색어</strong>만 보내고, 결과는 6시간 동안 기기에만 보관합니다. 검색어는 저장하지 않습니다. 예약 사이트(여기어때, 에어비앤비, 네이버 지도, 카카오맵) 버튼을 누르면 지역·날짜가 담긴 주소가 휴대폰 브라우저나 앱으로 열리며, 그 뒤의 정보 처리는 각 사이트의 개인정보처리방침을 따릅니다.</p>
+  <p>출발지·도착지·내 일정 장소는 앱에 든 전국 목록(시·군·구, 역, 읍·면·동)에서 찾고, 목록에 없는 이름을 "지도에서 찾기"로 찾을 때만 <strong>이용자가 입력한 검색어</strong>를 카카오(카카오 로컬 API) 또는 한국관광공사(공공데이터포털)로 보냅니다. 검색 결과는 저장하지 않으며, 이용자가 고른 장소의 이름·좌표만 위 1항처럼 소셜 계정일 때 기기에 저장합니다.</p>
+  <p>출퇴근 교통 알림(소셜 계정만)을 켜면 이용자가 정한 <strong>집·회사 위치(역·동 등 이름과 좌표)와 알림 시각</strong>을 이 기기에만 저장합니다. 평일 알림 시각과 "지금 확인"을 누를 때, 집과 회사를 잇는 경로 주변의 <strong>사각형 범위(경위도)</strong>만 국가교통정보센터(국토교통부, its.go.kr) 오픈API로 보내 사고·정체 정보를 받으며, 요청 과정에서 IP 주소가 그 서버에 전달됩니다. 받은 결과는 마지막 1건만 기기에 보관합니다. 계정 화면이나 출퇴근 알림 화면에서 끄면 집·회사 위치가 지워지고, 로그아웃·계정 삭제 때도 지워집니다. 게스트는 이 기능을 쓸 수 없습니다.</p>
+  <p>나들이 포토북은 이용자가 휴대폰의 사진 선택 화면에서 직접 고른 사진만 읽습니다(사진 전체 접근 권한을 요청하지 않습니다). 찍은 날짜·시각과 화질 계산은 <strong>기기 안에서만</strong> 하고, 사진과 만든 PDF를 운영자나 다른 서버로 보내지 않습니다. PDF는 이용자가 저장·공유를 누를 때만 이용자가 고른 곳으로 나가며, 앱 안에는 다음 포토북을 만들 때까지 임시로만 남습니다. 앞으로 인쇄 주문 기능을 붙이면 주문할 때 이용자의 확인을 받은 뒤에만 PDF를 인쇄 업체로 보내고, 이 방침을 먼저 고칩니다.</p>
 
   <h2>6. 제3자 제공</h2>
-  <p>앱은 위 로그인·광고·날씨 서비스 외에 이용자의 정보를 제3자에게 제공하지 않습니다. 로그인 과정의 정보 처리는 카카오와 Google의 개인정보처리방침을 따릅니다.</p>
+  <p>앱은 위 로그인·광고·날씨·숙소 정보·장소 검색·교통 정보 서비스 외에 이용자의 정보를 제3자에게 제공하지 않습니다. 로그인 과정의 정보 처리는 카카오와 Google의 개인정보처리방침을 따릅니다.</p>
 
   <h2>7. 이용자의 권리</h2>
   <p>이용자는 개인정보 열람, 정정, 삭제, 처리정지를 요구할 수 있으며 아래 연락처로 요청하면 지체 없이 처리합니다.</p>
 
   <h2 id="contact">8. 개인정보 보호책임자와 문의</h2>
   <div class="box">
-    <p>이름: hulkmacaron</p>
-    <p>이메일: hulkmacaron33@gmail.com</p>
+    <p>이름: <span data-operator="name">hulkmacaron</span></p>
+    <p>이메일: <span data-operator="email"><a href="mailto:hulkmacaron33@gmail.com">hulkmacaron33@gmail.com</a></span></p>
   </div>
   <p>개인정보 침해 신고·상담: 개인정보침해신고센터(privacy.kisa.or.kr, 국번 없이 118)</p>
 
-  <p class="foot">이 방침은 2026년 10월 17일부터 적용됩니다. 내용이 바뀌면 이 페이지와 앱 안의 방침을 함께 고치고 시행일을 바꿉니다.</p>
+  <p class="foot">이 방침은 2026년 10월 30일부터 적용됩니다. 내용이 바뀌면 이 페이지와 앱 안의 방침을 함께 고치고 시행일을 바꿉니다.</p>
 </div>
 </body>
 </html>
