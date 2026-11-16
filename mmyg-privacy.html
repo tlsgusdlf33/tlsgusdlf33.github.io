@@ -21,7 +21,7 @@ th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-ali
 <div class="wrap">
 <span class="app">🐶 멍멍 용사단 (게임 앱)</span>
 <h1>멍멍 용사단 개인정보처리방침</h1>
-<p class="meta">시행일: 2026년 11월 12일 · 이 문서는 안드로이드 게임 앱 「멍멍 용사단」에만 적용됩니다. 같은 사이트에 있는 다른 앱의 방침과는 별개입니다.</p>
+<p class="meta">시행일: 2026년 11월 17일 · 이 문서는 안드로이드 게임 앱 「멍멍 용사단」에만 적용됩니다. 같은 사이트에 있는 다른 앱의 방침과는 별개입니다.</p>
 
 <p>hulkmacaron(이하 "운영자")은 「멍멍 용사단」(이하 "앱") 이용자의 개인정보를 소중히 여기며, 관련 법령을 지킵니다.</p>
 
@@ -30,16 +30,15 @@ th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-ali
 <tr><th>항목</th><th>수집 시점</th><th>이용 목적</th></tr>
 <tr><td>기기 식별자 (안드로이드 ID)</td><td>게스트로 시작할 때</td><td>게스트 계정 구분, 같은 기기에서 진행 상황 이어 하기</td></tr>
 <tr><td>구글 계정 식별자, 이메일 주소, 이름</td><td>구글 계정으로 로그인할 때 (Google 로그인)</td><td>계정 구분, 진행 상황 이어 하기. 이 폰에만 저장하며 운영자 서버로 보내지 않습니다</td></tr>
-<tr><td>이용자가 정한 이름(닉네임), 스테이지 진행 기록</td><td>이름을 정할 때, 게임을 할 때</td><td>게임 화면과 랭킹 표시</td></tr>
+<tr><td>이용자가 정한 이름(닉네임), 스테이지 진행 기록</td><td>이름을 정할 때, 게임을 할 때</td><td>게임 화면과 랭킹 표시. 이름과 최고 스테이지는 랭킹 서버(Google Firebase)에 저장되어 다른 이용자에게 보입니다</td></tr>
 <tr><td>광고 ID, 기기 정보, 대략적인 위치(IP 기반), 광고 반응 기록</td><td>광고가 표시될 때 (Google AdMob이 수집)</td><td>광고 제공과 측정, 부정 이용 방지</td></tr>
-<tr><td>구매 내역</td><td>인앱 상품을 살 때 (Google Play 결제가 처리)</td><td>구매한 상품 제공과 복원</td></tr>
 </table></div>
-<p>운영자는 실명, 전화번호, 주소, 결제 카드 정보를 수집하지 않습니다. 결제 정보는 Google Play가 직접 처리하며 운영자에게 전달되지 않습니다.</p>
+<p>운영자는 실명, 전화번호, 주소, 결제 카드 정보를 수집하지 않습니다.</p>
 
 <h2>2. 보관 위치와 기간</h2>
 <ul>
 <li>게임 진행 상황과 이름은 이용자의 기기 안에 저장됩니다. 앱을 삭제하면 함께 삭제됩니다.</li>
-<li>랭킹 기능이 서버와 연결된 경우, 계정 식별자·이름·최고 스테이지가 랭킹 서버에 저장되며 삭제를 요청하면 지체 없이 삭제합니다.</li>
+<li>랭킹을 위해 Firebase 계정 식별자, 이름, 최고 스테이지가 랭킹 서버(Google Firebase, 서울 리전)에 저장되며 삭제를 요청하면 지체 없이 삭제합니다. 이메일 주소는 서버에 저장하지 않습니다.</li>
 <li>법령에서 보관을 정한 정보는 그 기간 동안 보관합니다.</li>
 </ul>
 
@@ -47,7 +46,7 @@ th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-ali
 <p>운영자는 이용자의 개인정보를 판매하지 않습니다. 앱은 아래 서비스를 사용하며, 각 서비스가 자신의 방침에 따라 정보를 처리합니다.</p>
 <ul>
 <li>Google AdMob (광고): <a href="https://policies.google.com/technologies/partner-sites">Google이 정보를 사용하는 방법</a></li>
-<li>Google Play 결제 (인앱 구매): <a href="https://policies.google.com/privacy">Google 개인정보처리방침</a></li>
+<li>Google Firebase (로그인, 랭킹 저장): <a href="https://firebase.google.com/support/privacy">Firebase 개인정보 보호</a></li>
 </ul>
 
 <h2>4. 이용자의 권리</h2>
