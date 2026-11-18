@@ -44,6 +44,7 @@ jobs:
           M=android/app/src/main/AndroidManifest.xml
           # 세로 화면 고정
           sed -i '0,/<activity/s//<activity android:screenOrientation="portrait"/' "$M"
+          grep -q 'screen.portrait' "$M" || sed -i '0,/<application/s//<uses-feature android:name="android.hardware.screen.portrait" android:required="false" \/>\n    <application/' "$M"
           # 구글 광고(실제 앱 ID)와 광고 ID 권한
           sed -i 's#</application>#<meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-2585881738799653~1488887541"/></application>#' "$M"
           sed -i '0,/<application/s##<uses-permission android:name="com.google.android.gms.permission.AD_ID"/><application#' "$M"
