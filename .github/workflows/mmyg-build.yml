@@ -184,3 +184,24 @@ jobs:
           gh release list -R tlsgusdlf33/Claude-M --limit 200 --json tagName -q '.[].tagName' \
             | grep '^apk-' | grep -vx "apk-${{ env.VC }}" \
             | while read -r t; do gh release delete "$t" -R tlsgusdlf33/Claude-M --yes --cleanup-tag; done
+
+      # 빌드가 끝날 때마다 이 공개 저장소에 보안 자료나 게임 코드가 섞여 들어오지 않았는지 검사한다.
+      # 하나라도 발견되면 빌드를 실패로 표시해 바로 알 수 있게 한다 (내용은 기록에 찍지 않고 파일 이름만 보여 준다).
+      - name: Public repo safety check
+        uses: actions/checkout@v4
+        with:
+          path: pubcheck
+          persist-credentials: false
+      - name: Scan public repo
+        working-directory: pubcheck
+        run: |
+          bad=0
+          f=$(git ls-files | grep -E -i '\.(keystore|jks|p12|pem|key)$|signing\.env$|google-services\.json$|^android-app/|^prototype/|^tools/make-www|mmyg-(release|debug)' || true)
+          if [ -n "$f" ]; then echo "::error::보안/게임 코드 파일 발견:"; echo "$f"; bad=1; fi
+          c=$(git grep -l -I -E 'storePassword|keyPassword|UPLOAD_PASS=|github_pat_|ghp_[A-Za-z0-9]{20}|BEGIN (RSA |EC )?PRIVATE KEY|var BAL=\{|function newGame\(' -- . ':!.github/workflows/mmyg-build.yml' || true)
+          if [ -n "$c" ]; then echo "::error::비밀 값/게임 코드 의심 내용 발견:"; echo "$c"; bad=1; fi
+          # 표준 디버그 키 비밀번호(android)는 공개 값이라 제외
+          if grep -E 'storePassword "[^$]|keyPassword "[^$]|-storepass [a-z]' .github/workflows/mmyg-build.yml | grep -v -q -E '"android"|-storepass android'; then echo "::error::빌드 파일에 비밀번호가 직접 적혀 있음"; bad=1; fi
+          [ $bad -eq 0 ] && echo "공개 저장소 검사 통과: 보안 자료·게임 코드 없음"
+          exit $bad
+
