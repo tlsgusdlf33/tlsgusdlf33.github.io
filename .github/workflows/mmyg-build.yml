@@ -108,7 +108,9 @@ jobs:
         run: |
           sed -i "s/versionCode 1$/versionCode ${{ env.VC }}/; s/versionName \"1.0\"/versionName \"1.0.${{ env.VC }}\"/" android/app/build.gradle
           grep -q "versionCode ${{ env.VC }}$" android/app/build.gradle
-          cat >> android/app/build.gradle <<'GRADLE'
+          # 업로드 키 비밀번호는 비공개 저장소의 android-app/signing.env 에만 있다 (워크플로에 적지 않음)
+          . ./signing.env; echo "::add-mask::$UPLOAD_PASS"
+          cat >> android/app/build.gradle <<GRADLE
 
           android {
               signingConfigs {
@@ -120,9 +122,9 @@ jobs:
                   }
                   upload {
                       storeFile file("../../upload.keystore")
-                      storePassword "mmyg-upload"
+                      storePassword "$UPLOAD_PASS"
                       keyAlias "upload"
-                      keyPassword "mmyg-upload"
+                      keyPassword "$UPLOAD_PASS"
                   }
               }
               buildTypes {
@@ -154,7 +156,7 @@ jobs:
 
       - name: Check that the AAB uses the upload key
         run: |
-          EXPECTED=$(keytool -list -keystore android-app/upload.keystore -storepass mmyg-upload | grep -i 'SHA-256' | sed 's/.*: //')
+          EXPECTED=$(. android-app/signing.env; keytool -list -keystore android-app/upload.keystore -storepass "$UPLOAD_PASS" | grep -i 'SHA-256' | sed 's/.*: //')
           ACTUAL=$(keytool -printcert -jarfile mmyg-release.aab | grep 'SHA256' | head -1 | sed 's/.*SHA256: //')
           echo "expected $EXPECTED"
           echo "actual   $ACTUAL"
