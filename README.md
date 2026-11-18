@@ -9,5 +9,6 @@ GitHub Pages로 제공되는 공개 사이트입니다.
 | `jumalnadeuli-privacy.html` | 주말나들이 개인정보처리방침. 원본은 A9 `docs/github-site/` (운영자 정보 입력 워크플로가 반영) |
 | `mmyg-privacy.html` | 멍멍 용사단(게임) 개인정보처리방침. 원본은 Claude-M 저장소 작업에서 직접 작성 |
 | `mmyg-delete-account.html` | 멍멍 용사단(게임) 계정 삭제 안내 |
+| `.github/workflows/mmyg-build.yml` | 멍멍 용사단 앱 빌드 전용. 코드는 비공개 저장소에서 받아 빌드하고 결과는 비공개 저장소 릴리스로만 올림 (이 저장소에는 코드·키를 두지 않음) |
 
 - 새 앱을 추가하면 `앱이름-privacy.html`을 올리고, 49 `web/site.config.json`의 `apps` 목록에 한 줄 추가합니다.

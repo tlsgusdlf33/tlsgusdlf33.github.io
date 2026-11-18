@@ -1,0 +1,184 @@
+name: 멍멍 용사단 빌드 (비공개 저장소 코드 사용)
+
+# 앱 껍데기를 바꿀 때만 필요하다 (플러그인 추가, 권한, 아이콘, 시작 화면 등).
+# 게임 내용만 고친 경우에는 ota.yml 이 업데이트를 올려 주므로 APK를 다시 설치하지 않아도 된다.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      # 플레이 콘솔 버전 번호는 이전 빌드(최대 40번대)보다 커야 하므로 100번부터
+      - run: echo "VC=$((100 + ${{ github.run_number }}))" >> "$GITHUB_ENV"
+      - uses: actions/checkout@v4
+        with:
+          repository: tlsgusdlf33/Claude-M
+          token: ${{ secrets.MMYG_TOKEN }}
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Wrap the game for the app
+        run: |
+          VERSION=$(date -u +%Y%m%d%H%M%S)
+          # 업데이트는 구글 플레이가 한다. 앱 내 자동 업데이트(--base)는 넣지 않는다.
+          python3 tools/make-www.py prototype/index.html android-app/www --version "$VERSION"
+
+      - name: Create the Android project
+        working-directory: android-app
+        run: |
+          npm install
+          npx cap add android
+          M=android/app/src/main/AndroidManifest.xml
+          # 세로 화면 고정
+          sed -i '0,/<activity/s//<activity android:screenOrientation="portrait"/' "$M"
+          # 구글 광고(실제 앱 ID)와 광고 ID 권한
+          sed -i 's#</application>#<meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-2585881738799653~1488887541"/></application>#' "$M"
+          sed -i '0,/<application/s##<uses-permission android:name="com.google.android.gms.permission.AD_ID"/><application#' "$M"
+          # 게임이 켜져 있는 동안 화면이 꺼지지(절전) 않게 한다
+          L=android/app/src/main/res/layout/activity_main.xml
+          sed -i '0,/CoordinatorLayout/s//CoordinatorLayout android:keepScreenOn="true"/' "$L"
+          grep -q 'keepScreenOn' "$L"
+          # 플레이 자동 보호(Play 자동 보호) 요구사항: 최소 SDK 24 이상
+          sed -i 's/minSdkVersion = [0-9]*/minSdkVersion = 24/' android/variables.gradle
+          grep -q 'minSdkVersion = 24' android/variables.gradle
+          # 플레이 요구사항: 대상 API 수준 36 이상
+          sed -i 's/compileSdkVersion = [0-9]*/compileSdkVersion = 36/; s/targetSdkVersion = [0-9]*/targetSdkVersion = 36/' android/variables.gradle
+          grep -q 'targetSdkVersion = 36' android/variables.gradle
+          echo 'android.suppressUnsupportedCompileSdk=36' >> android/gradle.properties
+          # 하단 내비게이션 바를 숨겨 배너가 맨 아래에 보이게 한다 (전면 광고처럼). 위로 밀면 잠깐 나타난다. 상태바는 유지.
+          MA=android/app/src/main/java/com/hulkmacaron/mmyg/MainActivity.java
+          cat > "$MA" <<'JAVA'
+          package com.hulkmacaron.mmyg;
+
+          import android.os.Bundle;
+          import androidx.core.graphics.Insets;
+          import androidx.core.view.ViewCompat;
+          import androidx.core.view.WindowCompat;
+          import androidx.core.view.WindowInsetsControllerCompat;
+          import androidx.core.view.WindowInsetsCompat;
+          import com.getcapacitor.BridgeActivity;
+
+          public class MainActivity extends BridgeActivity {
+              private void immersive() {
+                  WindowInsetsControllerCompat c = WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
+                  c.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+                  c.hide(WindowInsetsCompat.Type.navigationBars());
+              }
+              @Override
+              public void onCreate(Bundle savedInstanceState) {
+                  super.onCreate(savedInstanceState);
+                  android.view.View root = findViewById(android.R.id.content);
+                  ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
+                      Insets t = insets.getInsets(WindowInsetsCompat.Type.statusBars() | WindowInsetsCompat.Type.displayCutout());
+                      v.setPadding(t.left, t.top, t.right, 0);
+                      return WindowInsetsCompat.CONSUMED;
+                  });
+                  immersive();
+              }
+              @Override
+              public void onWindowFocusChanged(boolean hasFocus) {
+                  super.onWindowFocusChanged(hasFocus);
+                  if (hasFocus) immersive();
+              }
+          }
+          JAVA
+          sed -i 's/^          //' "$MA"
+          npx cap sync android
+
+      # 같은 서명 키를 쓰면 새 APK를 지우지 않고 덮어 설치할 수 있다 (디버그용 임시 키).
+      # ~/.android/debug.keystore 를 바꿔치기하는 방법은 적용되지 않아서, Gradle 설정에 키를 직접 지정한다.
+      # APK는 고정 디버그 키(덮어 설치용), AAB는 업로드 키(플레이 콘솔용)로 서명한다.
+      # 업로드 키는 잃어버리지 않도록 저장소에 함께 보관한다 (비공개 저장소).
+      # 플레이 앱 서명을 쓰므로 실제 앱 서명 키는 구글이 보관하고, 업로드 키는 콘솔에서 재설정할 수 있다.
+      - name: Set signing keys and version
+        working-directory: android-app
+        run: |
+          sed -i "s/versionCode 1$/versionCode ${{ env.VC }}/; s/versionName \"1.0\"/versionName \"1.0.${{ env.VC }}\"/" android/app/build.gradle
+          grep -q "versionCode ${{ env.VC }}$" android/app/build.gradle
+          cat >> android/app/build.gradle <<'GRADLE'
+
+          android {
+              signingConfigs {
+                  debug {
+                      storeFile file("../../debug.keystore")
+                      storePassword "android"
+                      keyAlias "androiddebugkey"
+                      keyPassword "android"
+                  }
+                  upload {
+                      storeFile file("../../upload.keystore")
+                      storePassword "mmyg-upload"
+                      keyAlias "upload"
+                      keyPassword "mmyg-upload"
+                  }
+              }
+              buildTypes {
+                  release {
+                      signingConfig signingConfigs.upload
+                  }
+              }
+          }
+          GRADLE
+
+      - name: Build debug APK and release AAB
+        working-directory: android-app/android
+        run: ./gradlew assembleDebug bundleRelease --no-daemon
+
+      - name: Collect the files
+        run: |
+          cp android-app/android/app/build/outputs/apk/debug/app-debug.apk mmyg-debug.apk
+          cp android-app/android/app/build/outputs/bundle/release/app-release.aab mmyg-release.aab
+
+      - name: Check that the APK uses the fixed key
+        run: |
+          EXPECTED=$(keytool -list -keystore android-app/debug.keystore -storepass android | grep -i 'SHA-256' | sed 's/.*: //')
+          # 최소 SDK 24부터 APK에 v1(JAR) 서명이 없어 keytool로는 못 읽는다. apksigner로 확인한다.
+          AS=$(ls -d "$ANDROID_HOME"/build-tools/*/ | sort -V | tail -1)apksigner
+          ACTUAL=$("$AS" verify --print-certs mmyg-debug.apk | grep -m1 'SHA-256 digest' | sed 's/.*: //' | tr 'a-f' 'A-F' | sed 's/../&:/g; s/:$//')
+          echo "expected $EXPECTED"
+          echo "actual   $ACTUAL"
+          test "$EXPECTED" = "$ACTUAL"
+
+      - name: Check that the AAB uses the upload key
+        run: |
+          EXPECTED=$(keytool -list -keystore android-app/upload.keystore -storepass mmyg-upload | grep -i 'SHA-256' | sed 's/.*: //')
+          ACTUAL=$(keytool -printcert -jarfile mmyg-release.aab | grep 'SHA256' | head -1 | sed 's/.*SHA256: //')
+          echo "expected $EXPECTED"
+          echo "actual   $ACTUAL"
+          test "$EXPECTED" = "$ACTUAL"
+
+      - name: Publish as a release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: apk-${{ env.VC }}
+          name: "멍멍 용사단 #${{ env.VC }} (APK + AAB)"
+          repository: tlsgusdlf33/Claude-M
+          token: ${{ secrets.MMYG_TOKEN }}
+          body: |
+            - `mmyg-debug.apk`: 폰에 바로 설치하는 파일
+            - `mmyg-release.aab`: 구글 플레이 콘솔에 올리는 파일 (versionCode ${{ env.VC }})
+          files: |
+            mmyg-debug.apk
+            mmyg-release.aab
+
+      # 용량 관리: 이 앱의 이전 릴리스(apk-* 태그)만 지운다. 다른 태그의 릴리스는 건드리지 않는다.
+      - name: Delete older releases of this app
+        env:
+          GH_TOKEN: ${{ secrets.MMYG_TOKEN }}
+        run: |
+          gh release list -R tlsgusdlf33/Claude-M --limit 200 --json tagName -q '.[].tagName' \
+            | grep '^apk-' | grep -vx "apk-${{ env.VC }}" \
+            | while read -r t; do gh release delete "$t" -R tlsgusdlf33/Claude-M --yes --cleanup-tag; done
