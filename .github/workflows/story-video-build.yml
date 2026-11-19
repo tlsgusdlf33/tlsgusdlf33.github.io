@@ -1,0 +1,115 @@
+name: 잠자리 동화 영상 만들기 (비공개 저장소 A8 사용)
+
+# 동화 글·녹음·영상 코드는 비공개 저장소 tlsgusdlf33/A8 에만 있다.
+# 이 파일은 A8 을 잠깐 받아 영상을 만들고, 결과는 A8 의 릴리스에만 올린다. 이 공개 저장소에는 아무것도 남기지 않는다.
+# 필요한 Secrets (이 공개 저장소 Settings > Secrets and variables > Actions):
+#   A8_TOKEN       : 세밀 토큰(Fine-grained), 저장소 A8 하나만, Contents 읽기/쓰기
+#   GOOGLE_TTS_KEY : (선택) tts 를 google 로 고를 때만
+
+on:
+  workflow_dispatch:
+    inputs:
+      story:
+        description: "동화 파일 이름(stories/ 안, .md 빼고). 비우면 가장 최근 동화"
+        required: false
+        default: ""
+      tts:
+        description: "목소리: edge(무료 미리보기) / google(상업용) / none(무음 시험). voices/ 에 녹음이 있으면 녹음을 씀"
+        type: choice
+        options: [edge, google, none]
+        default: edge
+      vertical:
+        description: "세로 영상(쇼츠·틱톡용)도 함께 만들기"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency: story-video-build
+
+jobs:
+  video:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: tlsgusdlf33/A8
+          ref: ccr-fd6455d3-ia8l4a
+          token: ${{ secrets.A8_TOKEN }}
+          path: a8
+          persist-credentials: false
+
+      - name: Install tools
+        run: |
+          sudo apt-get update -q >/dev/null
+          sudo apt-get install -y -q ffmpeg fonts-nanum fonts-noto-color-emoji >/dev/null
+          pip install -q edge-tts pillow
+
+      - name: Pick the story
+        working-directory: a8
+        run: |
+          S="${{ inputs.story }}"
+          [ -n "$S" ] || S=$(ls stories/2*.md | sort | tail -1 | xargs -n1 basename | sed 's/\.md$//')
+          test -f "stories/$S.md"
+          echo "STEM=$S" >> "$GITHUB_ENV"
+          V=$(ls voices/"$S".* 2>/dev/null | head -1 || true)
+          echo "VOICE=$V" >> "$GITHUB_ENV"
+          if [ -n "$V" ]; then pip install -q faster-whisper; echo "녹음 파일 사용"; else echo "녹음 없음: ${{ inputs.tts }} 음성 사용"; fi
+
+      - name: Render
+        working-directory: a8
+        env:
+          GOOGLE_TTS_KEY: ${{ secrets.GOOGLE_TTS_KEY }}
+        run: |
+          [ -n "$GOOGLE_TTS_KEY" ] && echo "::add-mask::$GOOGLE_TTS_KEY"
+          ARGS=(--out ../out --tts "${{ inputs.tts }}")
+          [ -n "$VOICE" ] && ARGS+=(--voice "$VOICE")
+          python3 video/render.py "stories/$STEM.md" "${ARGS[@]}"
+          if [ "${{ inputs.vertical }}" = true ]; then python3 video/render.py "stories/$STEM.md" "${ARGS[@]}" --vertical; fi
+
+      # 결과물은 비공개 저장소 A8 의 릴리스에만 올린다
+      - name: Publish to A8 releases
+        env:
+          GH_TOKEN: ${{ secrets.A8_TOKEN }}
+        run: |
+          SRC=$([ -n "$VOICE" ] && echo "직접 녹음" || echo "${{ inputs.tts }}")
+          gh release create "video-${{ github.run_number }}" out/* -R tlsgusdlf33/A8 \
+            --target ccr-fd6455d3-ia8l4a --title "동화 영상 #${{ github.run_number }}" \
+            --notes "목소리: $SRC · mp4 는 유튜브에, srt 는 유튜브 자막으로 올리세요."
+          rm -rf out a8
+
+      # 공개 저장소에 동화·녹음·영상 코드·비밀 값이 섞여 들어오지 않았는지 검사 (내용은 찍지 않고 파일 이름만)
+      - name: Public repo safety check
+        uses: actions/checkout@v4
+        with:
+          path: pubcheck
+          persist-credentials: false
+      - name: Scan public repo
+        working-directory: pubcheck
+        run: |
+          bad=0
+          f=$(git ls-files | grep -E -i '(^|/)(stories|voices)/|video/render\.py$|\.(mp4|m4a|wav|srt)$' || true)
+          if [ -n "$f" ]; then echo "::error::동화·녹음·영상 파일 발견:"; echo "$f"; bad=1; fi
+          c=$(git grep -l -I -E 'github_pat_|ghp_[A-Za-z0-9]{20}|AIza[0-9A-Za-z_-]{30}|GOOGLE_TTS_KEY=' -- . || true)
+          if [ -n "$c" ]; then echo "::error::비밀 값 의심 내용 발견:"; echo "$c"; bad=1; fi
+          [ $bad -eq 0 ] && echo "공개 저장소 검사 통과: 동화·녹음·비밀 값 없음"
+          exit $bad
+
+  # 공개 빌드 기록 지우기: 이 영상 작업의 지난 실행 기록(로그)을 지운다. 다른 앱의 기록은 건드리지 않는다.
+  # (진행 중인 이번 실행의 로그는 다음 실행 때 지워진다)
+  clean-logs:
+    needs: video
+    if: always()
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api "repos/${{ github.repository }}/actions/workflows/story-video-build.yml/runs?per_page=50" \
+            -q '.workflow_runs[] | select(.status=="completed") | .id' \
+            | grep -vx "${{ github.run_id }}" \
+            | while read -r id; do gh api -X DELETE "repos/${{ github.repository }}/actions/runs/$id" >/dev/null 2>&1 || true; done
