@@ -1,0 +1,106 @@
+{
+  "round": 342,
+  "date": "2026-11-19",
+  "generated_at": "2026-11-16T00:05:04",
+  "based_on": 341,
+  "tickets": [
+    [
+      1,
+      "187670"
+    ],
+    [
+      3,
+      "276592"
+    ],
+    [
+      4,
+      "851254"
+    ],
+    [
+      5,
+      "874595"
+    ],
+    [
+      2,
+      "315746"
+    ]
+  ],
+  "coverage": {
+    "p_any": 0.5,
+    "p_5th_or_better": 0.005,
+    "p_4th_or_better": 0.0005,
+    "random_p_any": 0.40950999999999993,
+    "random_p_5th_or_better": 0.004990009995000988
+  },
+  "verification": {
+    "rounds": 341,
+    "group_p": 0.47765542907666036,
+    "min_digit_p": 0.13597530036858396,
+    "tests": 13,
+    "significant": [],
+    "backtest_best": "직전 회차 끝자리 포함",
+    "backtest_best_validate_z": 0.0,
+    "adopted": "균등 무작위 + 끝자리 분산"
+  },
+  "review": {
+    "round": 341,
+    "date": "2026-11-12",
+    "group": 3,
+    "number": "194929",
+    "bonus": "783820",
+    "rows": [
+      {
+        "ticket": [
+          4,
+          "307120"
+        ],
+        "tail": 0,
+        "rank": 0,
+        "bonus": false,
+        "prize": 0
+      },
+      {
+        "ticket": [
+          5,
+          "465293"
+        ],
+        "tail": 0,
+        "rank": 0,
+        "bonus": false,
+        "prize": 0
+      },
+      {
+        "ticket": [
+          2,
+          "382406"
+        ],
+        "tail": 0,
+        "rank": 0,
+        "bonus": false,
+        "prize": 0
+      },
+      {
+        "ticket": [
+          1,
+          "207368"
+        ],
+        "tail": 0,
+        "rank": 0,
+        "bonus": false,
+        "prize": 0
+      },
+      {
+        "ticket": [
+          3,
+          "497059"
+        ],
+        "tail": 1,
+        "rank": 7,
+        "bonus": false,
+        "prize": 1000
+      }
+    ],
+    "won": 1000,
+    "spent": 5000
+  }
+}
