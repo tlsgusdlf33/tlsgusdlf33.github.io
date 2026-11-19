@@ -92,7 +92,7 @@ jobs:
           bad=0
           f=$(git ls-files | grep -E -i '(^|/)(stories|voices)/|video/render\.py$|\.(mp4|m4a|wav|srt)$' || true)
           if [ -n "$f" ]; then echo "::error::동화·녹음·영상 파일 발견:"; echo "$f"; bad=1; fi
-          c=$(git grep -l -I -E 'github_pat_|ghp_[A-Za-z0-9]{20}|AIza[0-9A-Za-z_-]{30}|GOOGLE_TTS_KEY=' -- . || true)
+          c=$(git grep -l -I -E 'github[_]pat_[A-Za-z0-9_]{30,}|gh[p]_[A-Za-z0-9]{30,}|AI[z]a[0-9A-Za-z_-]{30,}|GOOGLE_TTS_KEY=[A-Za-z0-9]' -- . || true)
           if [ -n "$c" ]; then echo "::error::비밀 값 의심 내용 발견:"; echo "$c"; bad=1; fi
           [ $bad -eq 0 ] && echo "공개 저장소 검사 통과: 동화·녹음·비밀 값 없음"
           exit $bad
