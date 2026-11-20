@@ -148,7 +148,7 @@ jobs:
       - name: Collect the files
         run: |
           cp android-app/android/app/build/outputs/apk/debug/app-debug.apk mmyg-debug.apk
-          cp android-app/android/app/build/outputs/bundle/release/app-release.aab mmyg-release.aab
+          cp android-app/android/app/build/outputs/bundle/release/app-release.aab mmyg-release-1.0.$VC.aab
 
       - name: Check that the APK uses the fixed key
         run: |
@@ -163,7 +163,7 @@ jobs:
       - name: Check that the AAB uses the upload key
         run: |
           EXPECTED=$(. android-app/signing.env; keytool -list -keystore android-app/upload.keystore -storepass "$UPLOAD_PASS" | grep -i 'SHA-256' | sed 's/.*: //')
-          ACTUAL=$(keytool -printcert -jarfile mmyg-release.aab | grep 'SHA256' | head -1 | sed 's/.*SHA256: //')
+          ACTUAL=$(keytool -printcert -jarfile mmyg-release-1.0.$VC.aab | grep 'SHA256' | head -1 | sed 's/.*SHA256: //')
           echo "expected $EXPECTED"
           echo "actual   $ACTUAL"
           test "$EXPECTED" = "$ACTUAL"
@@ -177,10 +177,10 @@ jobs:
           token: ${{ secrets.MMYG_TOKEN }}
           body: |
             - `mmyg-debug.apk`: 폰에 바로 설치하는 파일
-            - `mmyg-release.aab`: 구글 플레이 콘솔에 올리는 파일 (versionCode ${{ env.VC }})
+            - `mmyg-release-1.0.${{ env.VC }}.aab`: 구글 플레이 콘솔에 올리는 파일 (versionCode ${{ env.VC }})
           files: |
             mmyg-debug.apk
-            mmyg-release.aab
+            mmyg-release-1.0.${{ env.VC }}.aab
 
       # 용량 관리: 이 앱의 이전 릴리스(apk-* 태그)만 지운다. 다른 태그의 릴리스는 건드리지 않는다.
       - name: Delete older releases of this app
