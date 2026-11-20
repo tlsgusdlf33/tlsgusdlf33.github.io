@@ -136,6 +136,11 @@ jobs:
           }
           GRADLE
 
+      - name: Use Google's Maven Central mirror first (Maven Central often answers 429 to Actions runners)
+        run: |
+          mkdir -p ~/.gradle/init.d
+          printf '%s\n' "allprojects { buildscript { repositories { maven { url 'https://maven-central.storage-download.googleapis.com/maven2/' } } }; repositories { maven { url 'https://maven-central.storage-download.googleapis.com/maven2/' } } }" > ~/.gradle/init.d/mmyg-mirror.gradle
+
       - name: Build debug APK and release AAB
         working-directory: android-app/android
         run: ./gradlew assembleDebug bundleRelease --no-daemon
