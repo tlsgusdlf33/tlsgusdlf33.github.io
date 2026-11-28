@@ -1,0 +1,11 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>주말나들이 코스</title>
+<style>body{font-family:sans-serif;max-width:480px;margin:40px auto;padding:0 16px;line-height:1.6}a.b{display:block;text-align:center;padding:14px;border-radius:10px;background:#2e7d32;color:#fff;text-decoration:none;margin:10px 0}a.s{background:#555}</style></head>
+<body><h2 id="t">주말나들이 코스</h2><ol id="l"></ol>
+<a class="b" id="o" href="#">앱에서 열기</a><a class="b s" href="https://play.google.com/store/apps/details?id=com.jumalnadeuli.app">앱 설치하기</a>
+<script>
+var c=(new URLSearchParams(location.search).get('c')||'').replace(/[^A-Za-z0-9_-]/g,'').slice(0,4000);
+try{var d=JSON.parse(decodeURIComponent(escape(atob(c.replace(/-/g,'+').replace(/_/g,'/')))));document.getElementById('t').textContent=String(d.t);
+(d.items||[]).slice(0,20).forEach(function(x){var li=document.createElement('li');li.textContent=x[0]+' '+x[1];document.getElementById('l').appendChild(li);});}catch(e){}
+var u='intent://course?c='+c+'#Intent;scheme=jumalnadeuli;package=com.jumalnadeuli.app;end';
+document.getElementById('o').href=u;if(c)location.href=u;
+</script></body></html>
