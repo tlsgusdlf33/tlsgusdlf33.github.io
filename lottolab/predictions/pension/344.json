@@ -1,0 +1,46 @@
+{
+  "round": 344,
+  "date": "2026-12-03",
+  "generated_at": "2026-11-28T13:03:30",
+  "based_on": 343,
+  "tickets": [
+    [
+      5,
+      "444951"
+    ],
+    [
+      4,
+      "254352"
+    ],
+    [
+      2,
+      "922996"
+    ],
+    [
+      1,
+      "316227"
+    ],
+    [
+      3,
+      "347908"
+    ]
+  ],
+  "coverage": {
+    "p_any": 0.5,
+    "p_5th_or_better": 0.005,
+    "p_4th_or_better": 0.0005,
+    "random_p_any": 0.40950999999999993,
+    "random_p_5th_or_better": 0.004990009995000988
+  },
+  "verification": {
+    "rounds": 343,
+    "group_p": 0.4326728942304924,
+    "min_digit_p": 0.13771784258549377,
+    "tests": 13,
+    "significant": [],
+    "backtest_best": "직전 회차 끝자리 포함",
+    "backtest_best_validate_z": 0.0,
+    "adopted": "균등 무작위 + 끝자리 분산"
+  },
+  "review": null
+}
